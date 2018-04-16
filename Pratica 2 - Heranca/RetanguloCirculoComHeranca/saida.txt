@@ -1,0 +1,24 @@
+--- [Circulo] ---
+ Atributos da linha: 
+     Espessura = 3
+     Cor       = 2
+     Tipo      = 1
+ x = 100 y = 120
+ raio = 30
+ area = 2827.43 perimetro = 188.496
+--- [Retangulo] ---
+ Atributos da linha: 
+     Espessura = 1
+     Cor       = 2
+     Tipo      = 3
+ x = 40 y = 50
+ largura = 80 altura = 30
+ area = 2400 perimetro = 220
+--- [Circulo] ---
+ Atributos da linha: 
+     Espessura = 1
+     Cor       = 2
+     Tipo      = 1
+ x = 25 y = 17
+ raio = 25
+ area = 1963.5 perimetro = 157.08
