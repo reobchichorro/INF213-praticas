@@ -115,26 +115,18 @@ void MyVec<T>::clear() {
 	destroy();
 	create();
 }
-/*
-Adicione uma função chamada eraseMatchingElements a sua classe (essa função não está disponível nos vetores disponibilizados pela STL). 
-Tal função deverá receber um argumento e remover do vetor todos elementos iguais a esse argumento (o argumento devera ser passado por referencia?
-Referencia constante? A funcao devera ser constante?). Ao final deve-se retornar quantos elementos foram removidos 
-(a capacidade do vetor não deve ser alterada).
-Por exemplo, se o MyVec v armazena caracteres e v=[a,b,c,b,w,z], então após a chamada v.eraseMatchingElements(‘b’) 
-o valor de v deverá ser [a,c,w,z] e a chamada da função deverá ter retornado o número 2 (visto que dois caracteres ‘b’ foram removidos de v).
-Use o programa testaFuncoes.cpp  para testar sua função (entenda o funcionamento da entrada desse programa e crie entradas para avaliar o seu programa). 
-Ao usar o programa testaFuncoes.cpp, comente a parte dele que testa funcoes ainda não implementadas.
-Obs: sua funcao não deve alocar mais memoria (isso facilitaria bastante a implementacao, mas seria menos eficiente). 
 
-Exercício (escreva a resposta a esse exercício em comentários por cima da sua implementação da funcao eraseMatchingElements): 
-qual a ordem de complexidade (pior caso) da função eraseMatchingElements ? e’ possivel melhorar isso?
 
-*/
+//Exercicio: como alocar mais memoria poderia ajudar?
+//Se pudessemos alocar mais memoria, poderiamos nos aproveitar da funcao insert(), que aloca mais memoria.
+//
+//Exercício (escreva a resposta a esse exercício em comentários por cima da sua implementação da funcao eraseMatchingElements): 
+//qual a ordem de complexidade (pior caso) da função eraseMatchingElements ? e’ possivel melhorar isso?
+//A ordem de complexidade e' O(n^2). 
+
+//
 template<class T>
 int MyVec<T>::eraseMatchingElements(const T& erase) {
-	//Exercicio: como alocar mais memoria poderia ajudar?
-	//Se pudessemos alocar mais memoria. poderiamos nos aproveitar da funcao insert(), que aloca mais memoria.
-
 	int numOfElementsErased = 0;
 	for(int i=0; i<dataSize; i++) {
 		if(data[i] == erase) {
