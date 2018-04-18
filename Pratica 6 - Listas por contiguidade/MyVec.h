@@ -53,6 +53,7 @@ public:
 	int size() const {return dataSize;};
 
 	int eraseMatchingElements(const T&);
+	void sortedInsert(const T&) {}
 
 private:
 	T* data; //declare o membro de dados data, que devera armazenar os elementos da lista
@@ -137,6 +138,7 @@ int MyVec<T>::eraseMatchingElements(const T& erase) {
 			data[dataSize-1] = T();
 		}
 	}
+	dataSize -= numOfElementsErased;
 	return numOfElementsErased;
 }
 
