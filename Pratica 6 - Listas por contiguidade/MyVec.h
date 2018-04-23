@@ -136,6 +136,7 @@ int MyVec<T>::eraseMatchingElements(const T& erase) {
 				data[j] = data[j+1];
 			}
 			data[dataSize-1] = T();
+			i--;
 		}
 	}
 	dataSize -= numOfElementsErased;
@@ -149,12 +150,12 @@ void MyVec<T>::sortedInsert(const T& willBeInserted) {
 		return;
 	}
 	for(int pos=0; pos<dataSize; pos++) {
-		std::cout << pos << ": " << willBeInserted << " " << data[pos] << std::endl;
 		if(willBeInserted < data[pos]) {
 			insert(willBeInserted, pos);
 			return;
 		}
 	}
+	insert(willBeInserted, dataSize);
 }
 
 template<class T>
