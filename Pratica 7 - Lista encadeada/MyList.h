@@ -4,22 +4,6 @@ TAD MyList
 - Criado por Salles Magalhaes em 19/02/2018
 
 */
-/*
-Etapa 3
-Adicione uma função chamada eraseMatchingElements a sua classe (essa função não está disponível nas listas disponibilizados pela STL). 
-Tal função deverá receber um argumento e remover da lista todos elementos iguais a esse argumento. 
-Ao final deve-se retornar quantos elementos foram removidos (a capacidade da lista não deve ser alterada).
-
-Por exemplo, se o MyList v armazena caracteres e v=[a,b,c,b,w,z], 
-então após a chamada v.eraseMatchingElements(‘b’) o valor de v deverá ser [a,c,w,z] e a chamada da função deverá ter retornado o número 2 
-(visto que dois caracteres ‘b’ foram removidos de v).
-
-Etapa 4
-Implemente uma função chamada reverse(), que inverte a ordem dos elementos na lista. 
-Para praticar o uso de apontadores, NÃO utilize iteradores ou outras funções já providas pela classe MyList.
-
-Dica: use recursividade!
-*/
 #ifndef MyList_H__
 #define MyList_H__
 
@@ -156,7 +140,7 @@ MyList<T>::MyList(const MyList &other) {
 template<class T>
 MyList<T> & MyList<T>::operator=(const MyList &other) {
 	if(this==&other) return *this; 
-	clear(); //Exercicio: por que precisamos disso?
+	clear(); //Exercicio: por que precisamos disso? Por que senao poderemos ter vazamento de memoria.
 
 	if(other.dataFirst == NULL) {
 		dataFirst = dataLast = NULL;
@@ -188,6 +172,15 @@ void MyList<T>::push_back(const T&elem) {
 template<class T>
 void MyList<T>::push_front(const T&elem) {
 	//Termine esta funcao
+	if(dataFirst==NULL) { //caso especial: lista inicialmente vazia
+		dataFirst = dataLast = new Node<T>(elem);
+	} else {
+		iterator temp = new Node<T>(dataFirst->data);
+		temp->next = dataFirst->next;
+		dataFirst->data = elem;
+		dataFirst->next = temp;
+	}
+	dataSize++;
 }
 
 
@@ -231,7 +224,7 @@ template<class T>
 typename MyList<T>::iterator MyList<T>::erase(iterator elem) { //remove o elemento apontado por Elem
 													       //retorna o (apontador) para o elemento apos o removido
 	dataSize--;
-	if(elem==dataFirst && elem==dataLast) { //exercicio: por que precisamos desse caso especial?
+	if(elem==dataFirst && elem==dataLast) { //exercicio: por que precisamos desse caso especial? Porque senao cairemos no segundo caso, e, como o segundo caso nao trata dataLast, este apontara para uma memoria que foi deletada.
 		//so ha um elemento na lista
 		delete elem;
 		dataFirst = dataLast = NULL;
@@ -295,9 +288,32 @@ int MyList<T>::eraseMatchingElements(const T& willBeErased) {
 	return elemRemovidos;
 }
 
+/*
+Etapa 4
+Implemente uma função chamada reverse(), que inverte a ordem dos elementos na lista. 
+Para praticar o uso de apontadores, NÃO utilize iteradores ou outras funções já providas pela classe MyList.
+
+Dica: use recursividade!
+*/
 template<class T>
 void MyList<T>::reverse() {
-	
+	/*
+	Node<T>* temp = new Node<T>(dataFirst->data);
+	temp->next = dataFirst->next;
+	dataFirst->next = NULL;
+
+
+
+	if(dataLast->next == NULL) {
+			
+	}	
+	int i=0;
+	Node<T>* temp = dataFirst;
+	for(; temp != NULL; i++) {
+		temp = temp->next;
+	}
+	return i;
+	*/
 }
 
 template<class T2>
