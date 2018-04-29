@@ -2,7 +2,6 @@
 TAD MyList
 - Representa uma lista implementada por encadeamento simples
 - Criado por Salles Magalhaes em 19/02/2018
-
 */
 #ifndef MyList_H__
 #define MyList_H__
@@ -62,14 +61,14 @@ public:
 	iterator erase(iterator elem); //remove o elemento apontado por Elem
 														//retorna o (apontador) para o elemento apos o removido
 
-	iterator begin() {return dataFirst;} //Exercicio: e se tivermos uma lista constante, como itera-la para, por exemplo, imprimir os elementos?
+	iterator begin() {return dataFirst;} //Exercicio: e se tivermos uma lista constante, como itera-la para, por exemplo, imprimir os elementos? Utilizando um iterador nao-constante que percorre a lista.
 	iterator end() {return NULL;} //retorna um apontador para um nodo que estaria APOS o final da lista
 	iterator  next(iterator curr);
 	T& deref(iterator curr); //Retorna o elemento da lista apontado por curr (faz uma "derreferencia")
 	
 
 	//versoes constantes dos 4 metodos acima
-	const iterator begin() const {return dataFirst;} //Exercicio: e se tivermos uma lista constante, como itera-la para, por exemplo, imprimir os elementos?
+	const iterator begin() const {return dataFirst;} //Exercicio: e se tivermos uma lista constante, como itera-la para, por exemplo, imprimir os elementos? Utilizando um iterador nao-constante que percorre a lista.
 	const iterator end() const {return NULL;} //retorna um apontador para um nodo que estaria APOS o final da lista
 	const iterator next(const Node<T> *curr) const;
 	const T& deref(const iterator curr) const; //Retorna o elemento da lista apontado por curr
