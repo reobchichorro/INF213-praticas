@@ -80,7 +80,7 @@ public:
 	void empty() const {return size() == 0;};
 	int size() const; // na STL List, a funcao size() calcula o tamanho da lista dinamicamente (exercicio: qual a ordem de complexidade? O(n). )
 
-	void reverse();
+	void reverse(Node<T>* curr = NULL);
 	int eraseMatchingElements(const T&);
 
 private:
@@ -288,32 +288,21 @@ int MyList<T>::eraseMatchingElements(const T& willBeErased) {
 	return elemRemovidos;
 }
 
-/*
-Etapa 4
-Implemente uma função chamada reverse(), que inverte a ordem dos elementos na lista. 
-Para praticar o uso de apontadores, NÃO utilize iteradores ou outras funções já providas pela classe MyList.
-
-Dica: use recursividade!
-*/
 template<class T>
-void MyList<T>::reverse() {
-	/*
-	Node<T>* temp = new Node<T>(dataFirst->data);
-	temp->next = dataFirst->next;
-	dataFirst->next = NULL;
-
-
-
-	if(dataLast->next == NULL) {
-			
-	}	
-	int i=0;
-	Node<T>* temp = dataFirst;
-	for(; temp != NULL; i++) {
-		temp = temp->next;
+void MyList<T>::reverse(Node<T>* curr) {
+	if(dataFirst->next != NULL) {
+		Node<T>* temp = dataFirst->next;
+		dataFirst->next = curr;
+		curr = dataFirst;
+		dataFirst = temp;
+		reverse(curr);
 	}
-	return i;
-	*/
+	else {
+		dataFirst->next = curr;
+		dataLast = dataFirst;
+		while(dataLast->next != NULL)
+			dataLast = dataLast->next;
+	}
 }
 
 template<class T2>
