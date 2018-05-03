@@ -27,9 +27,7 @@ int main() {
     rodrigo.adicionaForma(0,4,'O',0);
     display(rodrigo);
     cout << endl;
-    rodrigo.adicionaForma(2,1,'O',0);
-    rodrigo.adicionaForma(6,1,'O',0);
-    rodrigo.adicionaForma(2,3,'O',0);
+    rodrigo.adicionaForma(6,4,'O',0);
     rodrigo.adicionaForma(4,3,'O',0);
     display(rodrigo);
     cout << endl;
