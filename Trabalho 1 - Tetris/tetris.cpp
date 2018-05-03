@@ -25,6 +25,29 @@ void Tetris::destroy() {    //Destroi jogo** e altura*, mas mantem o valor de co
     delete[] jogo;
 }
 
+Tetris::Tetris(const Tetris& other) {
+    *this = other;
+}
+
+Tetris& Tetris::operator=(const Tetris& other) {
+    if(&other==this) 
+        return *this;
+
+    col = other.getNumColunas();
+    jogo = new char*[other.getNumColunas()];
+    alturas = new int[other.getNumColunas()];
+
+    for(int i=0; i<other.getNumColunas(); i++) {
+        alturas[i] = other.getAltura(i);
+        jogo[i] = new char[other.getAltura(i)];
+        
+        for(int j=0; j<other.getAltura(i); j++)
+            jogo[i][j] = other.get(i,j);
+    }
+    
+	return *this;
+}
+
 int Tetris::getNumColunas() const {
     return col;
 }

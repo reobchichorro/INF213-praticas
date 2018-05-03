@@ -10,6 +10,8 @@ class Tetris {
         Tetris(const int c);    //Construtor
         ~Tetris();              //Destrutor
         void destroy();         //Funcao que deleta memoria, chamada pelo destrutor
+        Tetris(const Tetris&);  //Construtor de copia
+        Tetris& operator=(const Tetris&);   //Sobrecarga do operador =
         
         //Metodos get
         int getNumColunas() const;

@@ -3,7 +3,7 @@
 
 using namespace std;
 
-void display(const Tetris& mostrar) {
+void display(const Tetris mostrar) {
     for(int j=mostrar.getAltura(); j>=-1; j--) {
         for(int i=-1; i<mostrar.getNumColunas()+1; i++) {
             if(i==-1 || j==-1 || i==mostrar.getNumColunas() || j==mostrar.getAltura())
@@ -16,10 +16,11 @@ void display(const Tetris& mostrar) {
     
     for(int i=-1; i<mostrar.getNumColunas()+1; i++) {
         if(i==-1 || i==mostrar.getNumColunas())
-            cout << "|";
+            cout << " ";
         else
             cout << mostrar.getAltura(i);
     }
+    cout << endl << endl;
     /**/
 }
 
@@ -31,19 +32,18 @@ int main() {
     //cout << rodrigo.get(0, 1) << rodrigo.get(1, 1) << endl;
     //cout << rodrigo.get(0, 0) << rodrigo.get(1, 0) << endl;
     display(rodrigo);
-    cout << endl;
+
     rodrigo.adicionaForma(0,4,'O',0);
     display(rodrigo);
-    cout << endl;
+
     rodrigo.adicionaForma(6,4,'O',0);
     rodrigo.adicionaForma(4,3,'O',0);
     rodrigo.adicionaForma(2,3,'O',0);
     display(rodrigo);
-    cout << endl;
+    
     rodrigo.removeColuna(2);
     display(rodrigo);
-    cout << endl;
+    
     rodrigo.removeLinhasCompletas();
     display(rodrigo);
-    cout << endl;
 }
