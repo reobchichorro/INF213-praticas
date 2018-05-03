@@ -4,15 +4,23 @@
 using namespace std;
 
 void display(const Tetris& mostrar) {
-    for(int j=mostrar.getAltura()+1; j>=-1; j--) {
+    for(int j=mostrar.getAltura(); j>=-1; j--) {
         for(int i=-1; i<mostrar.getNumColunas()+1; i++) {
-            if(i==-1 || j==-1 || i==mostrar.getNumColunas() || j==mostrar.getAltura()+1)
+            if(i==-1 || j==-1 || i==mostrar.getNumColunas() || j==mostrar.getAltura())
                 cout << "|";
             else
                 cout << mostrar.get(i, j);
         }
         cout << " " << j << endl;
     }
+    
+    for(int i=-1; i<mostrar.getNumColunas()+1; i++) {
+        if(i==-1 || i==mostrar.getNumColunas())
+            cout << "|";
+        else
+            cout << mostrar.getAltura(i);
+    }
+    /**/
 }
 
 int main() {
