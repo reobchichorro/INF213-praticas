@@ -1,19 +1,19 @@
 all: game.exe
 
-game.exe: tetris.o game.o
-	g++ tetris.o game.o -g -o game.exe
+game.exe: Tetris.o game.o
+	g++ Tetris.o game.o -g -o game.exe
 	
 run: game.exe
 	./game.exe
 
 vrun: game.exe
-	valgrind ./game.exe
+	valgrind --leak-check=full --show-leak-kinds=all ./game.exe
 
 clean:
-	rm tetris.o game.o game.exe
+	rm Tetris.o game.o game.exe
 
-game.o: game.cpp tetris.h
+game.o: game.cpp Tetris.h
 	g++ -c -g game.cpp
 
-tetris.o: tetris.h tetris.cpp
-	g++ -c -g tetris.cpp
+Tetris.o: Tetris.h Tetris.cpp
+	g++ -c -g Tetris.cpp

@@ -25,7 +25,7 @@ class Tetris {
         void removeColuna(const char c);
         bool removeLinhaCompleta(const int l);
         void removeLinhasCompletas();
-        bool adicionaForma(const int coluna, const int linha, const char id='O', const int rotacao=0);
+        bool adicionaForma(const int coluna, const int linha, const char id, const int rotacao);
 
     private:
         char** jogo;    //Matriz representando o estado do jogo

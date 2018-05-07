@@ -1,6 +1,6 @@
 #include <iostream>
 #include <string>
-#include "tetris.h"
+#include "Tetris.h"
 
 Tetris::Tetris(const int c) {
     col = c;
@@ -15,14 +15,16 @@ Tetris::Tetris(const int c) {
 
 Tetris::~Tetris() {
     destroy();
-    col=0;  //Operacao que nao e' realizada por destroy().
 }
 
-void Tetris::destroy() {    //Destroi jogo** e altura*, mas mantem o valor de col.
-    delete[] alturas;
-    for(int i=0; i<getNumColunas(); i++)
-        delete[] jogo[i];
-    delete[] jogo;
+void Tetris::destroy() {    //Destroi jogo** e altura* e coloca o numero de colunas como 0.
+    if(getNumColunas() != 0) {
+        delete[] alturas;
+        for(int i=0; i<getNumColunas(); i++)
+            delete[] jogo[i];
+        delete[] jogo;
+    }
+    col=0;
 }
 
 Tetris::Tetris(const Tetris& other) {
@@ -40,7 +42,7 @@ Tetris& Tetris::operator=(const Tetris& other) {
     for(int i=0; i<other.getNumColunas(); i++) {
         alturas[i] = other.getAltura(i);
         jogo[i] = new char[other.getAltura(i)];
-        
+
         for(int j=0; j<other.getAltura(i); j++)
             jogo[i][j] = other.get(i,j);
     }
@@ -81,7 +83,7 @@ char Tetris::get(const int c, const int l) const {
     if(0 <= c && c < getNumColunas())   //Os condicionais verificam se a posicao de jogo** requisitada esta alocada.
         if(0 <= l && l < getAltura(c))
             return jogo[c][l];  //Se sim, retornamos o pixel requisitado.
-    
+    //if(c==2 && l==4) cout << "rola " << getNumColunas() << " " << getAltura(c) << endl; 
     return ' '; //Caso contrario, retornamos um espaco vazio.
 }
 
@@ -110,9 +112,12 @@ void Tetris::removeColuna(const char c) {
         for(int i=0; i<getNumColunas()-1; i++) {    //Iteramos ate o novo numero de colunas, que e' (numero antigo - 1).
             if(i < c) {                             //Caso estejamos antes da coluna que sera removida, pegamos os mesmos valores.
                 alturasTemp[i] = getAltura(i);
-                temp[i] = new char[alturasTemp[i]];
-                for(int j=0; j<alturasTemp[i]; j++)
-                    temp[i][j] = jogo[i][j];
+                if(alturasTemp[i] != 0) {
+                    temp[i] = new char[alturasTemp[i]];
+                    for(int j=0; j<alturasTemp[i]; j++)
+                        temp[i][j] = jogo[i][j];
+                } 
+                else temp[i] = NULL; 
             } else {                                //Caso contrario, pegamos os valores da coluna seguinte, ja que, 
                 alturasTemp[i] = getAltura(i+1);    //se removermos a coluna 4, por exemplo, a nova coluna 4 sera a antiga coluna 5.  
                 temp[i] = new char[alturasTemp[i]];
@@ -120,10 +125,10 @@ void Tetris::removeColuna(const char c) {
                     temp[i][j] = jogo[i+1][j];
             }
         }
-
+        int colunas = getNumColunas() - 1;
         destroy();      //Destruimos jogo** e alturas* antigos.
         jogo = temp;    //Passamos os novos valores de jogo** .
-        col--;          //Novo numero de colunas.
+        col = colunas;  //Novo numero de colunas.
         alturas = alturasTemp;  //Novas alturas.
         temp = NULL;
         alturasTemp = NULL;
@@ -144,15 +149,24 @@ bool Tetris::removeLinhaCompleta(const int l) {
         alturasTemp[i] = getAltura(i)-1;
         temp[i] = new char[alturasTemp[i]];   //A nova altura sera (altura antiga - 1), ja que vamos remover uma linha.
 
+        bool colunaVazia = true;
         for(int j=0; j < alturasTemp[i]; j++) {
             if(j < l)                           //Enquanto estivermos antes da linha que sera removida,
                 temp[i][j] = jogo[i][j];        //pegamos o valor antigo.
             else                                //Mas a partir da linha removida pegamos a linha seguinte, ja que,
                 temp[i][j] = jogo[i][j+1];      //se removermos a linha 2, por exemplo, a nova linha 2 sera a antiga linha 3.
+            if(temp[i][j] != ' ') colunaVazia = false;
+        }
+        if(colunaVazia) {
+            delete[] temp[i];
+            temp[i] = NULL;
+            alturasTemp[i] = 0;
         }     
     }
 
+    int colunas = getNumColunas();
     destroy();      //Destruimos os valores antigos de jogo** e alturas*,
+    col = colunas;
     jogo = temp;    //e atribuimos os novos.
     alturas = alturasTemp;
     temp = NULL;
@@ -169,40 +183,120 @@ void Tetris::removeLinhasCompletas() {
                     //a linha 3 se tornara a nova linha 2. Caso nao facamos j--, essa linha sera pulada.
 }
 
-
 bool Tetris::adicionaForma(const int coluna, const int linha, const char id, const int rotacao) {
-    if(0 <= coluna && coluna < getNumColunas() - 1) {
-        if(1 <= linha) {
-            bool ehValido = get(coluna, linha) == ' ';
-            //cout << ehValido << endl;
-            ehValido = ehValido && get(coluna+1, linha);
-            ehValido = ehValido && get(coluna, linha-1);
-            ehValido = ehValido && get(coluna+1, linha-1);
+    if(rotacao%90 != 0 || rotacao < 0) return false;    //Nao sera possivel adicionar a peca caso a rotacao seja invalida.
+    
+    //Fase 1: Criar uma matriz representando a peca que sera adicionada. 
+    //O tamanho da matriz sera o mais compacto possivel para armazenar a peca.
+    char** peca;
+    int largura, altura;    //Guardam a altura e a largura da peca. Essas variaveis serao usadas/relevantes durante toda a funcao.
+    if(id == 'O') {         //Os condicionais tratam cada um dos possiveis ids, criando a peca com a largura e altura corretas e a preenche de acordo com a especificacao.
+        largura = altura = 2;
+        peca = new char*[largura];
+        peca[0] = new char[altura];
+        peca[1] = new char[altura];
+        peca[0][0] = peca[0][1] = peca[1][0] = peca[1][1] = id;
+    } else if(id == 'I') {
+        largura = 1; altura = 4;
+        peca = new char*[largura];
+        peca[0] = new char[altura];
+        peca[0][0] = peca[0][1] = peca[0][2] = peca[0][3] = id;
+    } else if(id == 'J') {
+        largura = 4; altura = 2;
+        peca = new char*[largura];
+        for(int i=0; i<largura; i++) {
+            peca[i] = new char[altura];
+            peca[i][0] = id;
+            peca[i][1] = ' ';
+        }
+        peca[3][1] = 'J';
+    } else if(id == 'L') {
+        largura = 4; altura = 2;
+        peca = new char*[largura];
+        for(int i=0; i<largura; i++) {
+            peca[i] = new char[altura];
+            peca[i][0] = id;
+            peca[i][1] = ' ';
+        }
+        peca[0][1] = 'L';
+    } else {    //As pecas de id Z, S e T teraoa o mesmo tamanho, logo, para a alocacao de memoria, as tres estao sendo contempladas no mesmo condicional. 
+        largura = 3; altura = 2;
+        peca = new char*[largura];
+        for(int i=0; i<largura; i++)
+            peca[i] = new char[altura];
+
+        if(id == 'S') {
+            peca[0][0] = peca[2][1] = ' ';
+            peca[0][1] = peca[1][0] = peca[1][1] = peca[2][0] = id;
+        } else if(id == 'T') {
+            peca[0][1] = peca[2][1] = ' ';
+            peca[0][0] = peca[1][0] = peca[1][1] = peca[2][0] = id;
+        } else if(id == 'Z') {
+            peca[0][1] = peca[2][0] = ' ';
+            peca[0][0] = peca[1][0] = peca[1][1] = peca[2][1] = id;
+        } else {    //Caso o programa chegue neste condicional, significa que o id passado como parametro e' invalido.
+            for(int i=0; i<largura; i++)
+                delete[] peca[i];
+            delete[] peca;
+            return false; //Caractere invalido
+        }
+    }
+
+    //Fase 2: Rotacionar a peca
+    int rotacaoPeca = 0;    //Guarda a rotacao atual da peca
+    while(rotacaoPeca != rotacao) {
+        char** novaPeca = new char*[altura];
+        for(int j=0; j<altura; j++)
+            novaPeca[j] = new char[largura];
+
+        for(int j=0; j<altura; j++)
+            for(int i=0; i<largura; i++) 
+                novaPeca[j][i] = peca[i][altura-1-j]; 
+
+        for(int i=0; i<largura; i++)
+            delete[] peca[i];
+        delete[] peca;
+        peca = novaPeca;
+        novaPeca = NULL;
+
+        int temp = largura;
+        largura = altura;
+        altura = temp;
+        rotacaoPeca+=90;
+    }
+    
+    if(0 <= coluna && coluna <= getNumColunas() - largura) {
+        if(altura-1 <= linha) {
+            bool ehValido = true;
+            for(int i=0; i<largura && ehValido; i++)
+                for(int j=altura-1; j>=0 && ehValido; j--)
+                    if(peca[i][j] != ' ') 
+                        ehValido = ehValido && (get(i+coluna, linha-j) == ' '); 
 
             if(ehValido) {
-                for(int i=coluna; i<=coluna+1; i++) {
-                    for(int j=linha; j>=linha-1; j--) {
-                        if(j<getAltura(i)) {
-                            jogo[i][j] = id;
-                            //cout << "Teste " << i << " " << j << " " << jogo[i][j] << endl;
+                for(int i=0; i<largura; i++) {
+                    for(int j=altura-1; j>=0; j--) {
+                        if(j+linha<getAltura(i+coluna)) {
+                            jogo[i+coluna][linha-j] = peca[i][j];
                         }
                         else {
-                            alocarColunaAteAltura(i, j+1);
-                            jogo[i][j] = id;
-                            //cout << "Teste2 " << i << " " << j << " " << jogo[i][j] << " " << getAltura(i) << endl;
+                            alocarColunaAteAltura(i+coluna, linha+1-j);
+                            jogo[i+coluna][linha-j] = peca[i][j];
                         }
                         
                     }
                 }
             }
+            for(int i=0; i<largura; i++)
+                delete[] peca[i];
+            delete[] peca;
             return ehValido;
-            /*
-            for(int j=linha; j<getAltura(coluna); j--)
-                if(get(coluna, j) != ' ') return false;
-            */
-
         }
         return false;
     }
+
+    for(int i=0; i<largura; i++)
+        delete[] peca[i];
+    delete[] peca;
     return false;
 }
