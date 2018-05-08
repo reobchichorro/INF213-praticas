@@ -24,37 +24,51 @@ void display(const Tetris mostrar) {
 }
 
 int main() {
-    Tetris rodrigo(8);
-    display(rodrigo);
-    bool haha = rodrigo.adicionaForma(0,1,'O',90);
-    display(rodrigo);
-    rodrigo.adicionaForma(0,4,'Z',90);
-    rodrigo.adicionaForma(5,4,'S',270);
-    rodrigo.adicionaForma(7,4,'I',0);
-    rodrigo.adicionaForma(2,3,'T',0);
-    display(rodrigo);
+    Tetris rodrigo(7);
+    //display(rodrigo);
+    bool haha = rodrigo.adicionaForma(1,1,'O',90);
     rodrigo.adicionaForma(2,4,'O',0);
-    //rodrigo.adicionaForma(4,3,'O',180);
-    //rodrigo.adicionaForma(2,3,'O',270);
+    rodrigo.adicionaForma(4,3,'O',180);
+    rodrigo.adicionaForma(2,3,'O',270);
+
+    Tetris gabriela(4);
+    haha = gabriela.adicionaForma(4,2,'O',0);
+    gabriela = rodrigo;
+
+    Tetris maristela(rodrigo);
+
+    Tetris hahaha = rodrigo;
+
+
+    //display(rodrigo);
+    //rodrigo.adicionaForma(5,5,'I',270);
+    //rodrigo.adicionaForma(2,4,'I',270);
+    //rodrigo.adicionaForma(1,2,'I',270);
+    //rodrigo.adicionaForma(0,4,'Z',90);
+    
+    //rodrigo.adicionaForma(5,4,'S',270);
+    //rodrigo.adicionaForma(7,4,'I',0);
+    //rodrigo.adicionaForma(2,3,'T',0);
+    //display(rodrigo);
     /*
     rodrigo.adicionaForma(0,4,'Z',90);
     rodrigo.adicionaForma(0,4,'S',180);
     rodrigo.adicionaForma(0,4,'L',270);
+
     */
 
-    display(rodrigo);
+    //display(rodrigo);
     
-    rodrigo.removeColuna(2);
-    display(rodrigo);
     
     rodrigo.removeLinhasCompletas();
-    display(rodrigo);
+    //display(rodrigo);
 
+    rodrigo.removeColuna(8);
+    rodrigo.removeColuna(7);
+    rodrigo.removeColuna(6);
     rodrigo.removeColuna(5);
-    rodrigo.removeColuna(1);
-    rodrigo.removeColuna(0);
-    rodrigo.removeColuna(0);
-    display(rodrigo);
+    rodrigo.removeColuna(4);
+    //display(rodrigo);
     rodrigo.destroy();
 
 }

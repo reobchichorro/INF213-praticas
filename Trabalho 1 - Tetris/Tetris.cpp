@@ -4,8 +4,15 @@
 
 Tetris::Tetris(const int c) {
     col = c;
-    jogo = new char*[c];
-    alturas = new int[c];
+    if(c > 0) {
+        jogo = new char*[c];
+        alturas = new int[c];
+    }
+    else {
+        col = 0; 
+        jogo = NULL;
+        alturas = NULL;
+    }
 
     for(int i=0; i<c; i++) {
         alturas[i] = 0; //Nao ha nenhum pixel.
@@ -23,21 +30,47 @@ void Tetris::destroy() {    //Destroi jogo** e altura* e coloca o numero de colu
         for(int i=0; i<getNumColunas(); i++)
             delete[] jogo[i];
         delete[] jogo;
+        alturas = NULL;
+        jogo = NULL;
     }
     col=0;
 }
 
 Tetris::Tetris(const Tetris& other) {
-    *this = other;
+    if(&other==this) 
+        return;
+
+    col = other.getNumColunas();
+    if(other.getNumColunas() > 0) {
+        jogo = new char*[other.getNumColunas()];
+        alturas = new int[other.getNumColunas()];
+    } else {
+        jogo = NULL;
+        alturas = NULL;
+    }
+
+    for(int i=0; i<other.getNumColunas(); i++) {
+        alturas[i] = other.getAltura(i);
+        jogo[i] = new char[other.getAltura(i)];
+
+        for(int j=0; j<other.getAltura(i); j++)
+            jogo[i][j] = other.get(i,j);
+    }
 }
 
 Tetris& Tetris::operator=(const Tetris& other) {
     if(&other==this) 
         return *this;
 
+    destroy();
     col = other.getNumColunas();
-    jogo = new char*[other.getNumColunas()];
-    alturas = new int[other.getNumColunas()];
+    if(other.getNumColunas() > 0) {
+        jogo = new char*[other.getNumColunas()];
+        alturas = new int[other.getNumColunas()];
+    } else {
+        jogo = NULL;
+        alturas = NULL;
+    }
 
     for(int i=0; i<other.getNumColunas(); i++) {
         alturas[i] = other.getAltura(i);
@@ -276,14 +309,15 @@ bool Tetris::adicionaForma(const int coluna, const int linha, const char id, con
             if(ehValido) {
                 for(int i=0; i<largura; i++) {
                     for(int j=altura-1; j>=0; j--) {
-                        if(j+linha<getAltura(i+coluna)) {
-                            jogo[i+coluna][linha-j] = peca[i][j];
+                        if(peca[i][j] != ' ') {
+                            if(j+linha<getAltura(i+coluna)) {
+                                jogo[i+coluna][linha-j] = peca[i][j];
+                            }
+                            else {
+                                alocarColunaAteAltura(i+coluna, linha+1-j);
+                                jogo[i+coluna][linha-j] = peca[i][j];
+                            }
                         }
-                        else {
-                            alocarColunaAteAltura(i+coluna, linha+1-j);
-                            jogo[i+coluna][linha-j] = peca[i][j];
-                        }
-                        
                     }
                 }
             }
