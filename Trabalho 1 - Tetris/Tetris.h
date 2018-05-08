@@ -21,10 +21,15 @@ class Tetris {
         char get(const int c, const int l) const;
 
         //Metodos que criam e removem linhas e colunas:
-        void alocarColunaAteAltura(const int c, const int l);
+        void alocarColunaAteAltura(const int c, const int l);   //Aloca memoria na coluna c tal que sua nova altura seja l+1.
         void removeColuna(const char c);
         bool removeLinhaCompleta(const int l);
         void removeLinhasCompletas();
+
+        //adicionaForma e metodos auxiliares:
+        void criarPeca(char**& peca, int& largura, int& altura, const char id) const;
+        void rotacionar(char**& peca, int& largura, int& altura, const int rotacao) const;
+        bool colocarPeca(char**& peca, const int largura, const int altura, const int coluna, const int linha);
         bool adicionaForma(const int coluna, const int linha, const char id, const int rotacao);
 
     private:
