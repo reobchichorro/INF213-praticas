@@ -9,14 +9,14 @@ run: game.exe
 vrun: game.exe
 	valgrind --leak-check=full --show-leak-kinds=all ./game.exe
 
-jogo.exe: Tetris.cpp jogoTetris.cpp
+a.out: Tetris.cpp jogoTetris.cpp
 	g++ Tetris.cpp jogoTetris.cpp -lncurses
 
-sallesvrun:
+testevrun: a.out
 	valgrind --leak-check=full --show-leak-kinds=all ./a.out
 
 clean:
-	rm Tetris.o game.o game.exe
+	rm Tetris.o game.o game.exe a.out
 
 game.o: game.cpp Tetris.h
 	g++ -c -g game.cpp
