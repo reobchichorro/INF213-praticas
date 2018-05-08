@@ -29,7 +29,7 @@ class Tetris {
         //adicionaForma e metodos auxiliares:
         void criarPeca(char**& peca, int& largura, int& altura, const char id) const;
         void rotacionar(char**& peca, int& largura, int& altura, const int rotacao) const;
-        bool colocarPeca(char**& peca, const int largura, const int altura, const int coluna, const int linha);
+        bool colocarPeca(char**& peca, const int largura, const int altura, const int coluna, const int linha); 
         bool adicionaForma(const int coluna, const int linha, const char id, const int rotacao);
 
     private:

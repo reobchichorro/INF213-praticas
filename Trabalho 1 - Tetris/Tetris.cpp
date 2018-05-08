@@ -227,7 +227,7 @@ void Tetris::criarPeca(char**& peca, int& largura, int& altura, const char id) c
         peca[1] = new char[altura];
         peca[0][0] = peca[0][1] = peca[1][0] = peca[1][1] = id; //preenche a peca.
     } 
-    else if(id == 'I') {            //Todos os outros casos funcionam de maneira analoga ao 'O'.
+    else if(id == 'I') {            //Todos os outros ids funcionam de maneira analoga ao 'O'.
         largura = 1; altura = 4;
         peca = new char*[largura];
         peca[0] = new char[altura];
@@ -262,15 +262,18 @@ void Tetris::criarPeca(char**& peca, int& largura, int& altura, const char id) c
         if(id == 'S') {
             peca[0][0] = peca[2][1] = ' ';
             peca[0][1] = peca[1][0] = peca[1][1] = peca[2][0] = id;
-        } else if(id == 'T') {
+        } 
+        else if(id == 'T') {
             peca[0][1] = peca[2][1] = ' ';
             peca[0][0] = peca[1][0] = peca[1][1] = peca[2][0] = id;
-        } else if(id == 'Z') {
+        } 
+        else if(id == 'Z') {
             peca[0][1] = peca[2][0] = ' ';
             peca[0][0] = peca[1][0] = peca[1][1] = peca[2][1] = id;
-        } else {    //Caso o programa chegue neste condicional, significa que o id passado como parametro e' invalido.
+        } 
+        else {                      //Caso o programa chegue neste condicional, significa que o id passado como parametro e' invalido.
             for(int i=0; i<largura; i++)
-                delete[] peca[i];
+                delete[] peca[i];   //Nesse caso, destruimos a peca.
             delete[] peca;
             peca = NULL;
         }
@@ -279,45 +282,46 @@ void Tetris::criarPeca(char**& peca, int& largura, int& altura, const char id) c
 
 void Tetris::rotacionar(char**& peca, int& largura, int& altura, const int rotacao) const {
     for(int rotacaoPeca = 0; rotacaoPeca<rotacao; rotacaoPeca+=90) {    //rotacaoPeca guarda a rotacao atual da peca.
-        char** novaPeca = new char*[altura];
-        for(int j=0; j<altura; j++)
-            novaPeca[j] = new char[largura];
+        char** novaPeca = new char*[altura];    //Variavel auxiliar que armazena como sera a peca depois de rotacionada. 
+        for(int j=0; j<altura; j++)             //Sua largura sera a altura da peca antiga,
+            novaPeca[j] = new char[largura];    //e sua altura sera a largura da peca antiga.
 
         for(int j=0; j<altura; j++)
             for(int i=0; i<largura; i++) 
-                novaPeca[j][i] = peca[i][altura-1-j]; 
+                novaPeca[j][i] = peca[i][altura-1-j];   //Esta e' uma relacao entre a peca nova (rotacionada em 90 graus) e a peca antiga.
 
         for(int i=0; i<largura; i++)
-            delete[] peca[i];
-        delete[] peca;
-        peca = novaPeca;
+            delete[] peca[i];   
+        delete[] peca;      //Destruimos a peca antiga,
+        peca = novaPeca;    //e passamos a ela os valores da peca nova.
         novaPeca = NULL;
 
-        int temp = largura;
+        int temp = largura; //Variavel auxiliar para fazer a troca de largura e altura.
         largura = altura;
         altura = temp;
     }
 }
 
 bool Tetris::colocarPeca(char**& peca, const int largura, const int altura, const int coluna, const int linha) {
-    bool ehValido = (0 <= coluna && coluna <= getNumColunas() - largura);
+    //ehValido e' responsavel por dizer se houve sucesso em colocar a peca ou nao.
+    bool ehValido = (0 <= coluna && coluna <= getNumColunas() - largura);   //Verificamos se a peca cabe horizontalmente.
     if(ehValido) {
-        ehValido = ehValido && (altura-1 <= linha);
+        ehValido = ehValido && (altura-1 <= linha);     //Verificamos se a peca cabe verticalmente.
         if(ehValido) {
-            for(int i=0; i<largura && ehValido; i++)
-                for(int j=altura-1; j>=0 && ehValido; j--)
+            for(int i=0; i<largura && ehValido; i++)        //Esse loop verifica se nao ha' conflito entre uma peca ja alocada no jogo,
+                for(int j=altura-1; j>=0 && ehValido; j--)  //e a peca que queremos colocar.
                     if(peca[i][j] != ' ') 
                         ehValido = ehValido && (get(i+coluna, linha-j) == ' '); 
 
-            if(ehValido) {
+            if(ehValido) { 
                 for(int i=0; i<largura; i++) {
                     for(int j=altura-1; j>=0; j--) {
                         if(peca[i][j] != ' ') {
-                            if(j+linha<getAltura(i+coluna)) {
+                            if(j+linha<getAltura(i+coluna)) {   //Se ja houver memoria alocada na coluna, e' so colocar o pixel.
                                 jogo[i+coluna][linha-j] = peca[i][j];
                             }
                             else {
-                                alocarColunaAteAltura(i+coluna, linha+1-j);
+                                alocarColunaAteAltura(i+coluna, linha+1-j); //Senao, precisamos alocar memoria primeiro.
                                 jogo[i+coluna][linha-j] = peca[i][j];
                             }
                         }
@@ -326,10 +330,10 @@ bool Tetris::colocarPeca(char**& peca, const int largura, const int altura, cons
             }
         }
     }
-    for(int i=0; i<largura; i++)
+    for(int i=0; i<largura; i++)    //Nao precisamos mais da peca, entao devemos deleta-la
         delete[] peca[i];
     delete[] peca;
-    return ehValido;
+    return ehValido;    //Retornamos o valor de ehValido.
 }
 
 bool Tetris::adicionaForma(const int coluna, const int linha, const char id, const int rotacao) {
@@ -347,5 +351,5 @@ bool Tetris::adicionaForma(const int coluna, const int linha, const char id, con
     rotacionar(peca, largura, altura, rotacao);
 
     //Fase 3: Alocar a peca
-    return colocarPeca(peca, largura, altura, coluna, linha);
+    return colocarPeca(peca, largura, altura, coluna, linha);   //Retorna true se a peca foi colocada com sucesso.
 }
