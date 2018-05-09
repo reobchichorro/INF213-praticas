@@ -9,6 +9,7 @@ TAD MyList2
 #define MyList2_H__
 
 #include <iostream>
+#include <algorithm>
 #include <string>
 #include <ostream>
 
@@ -280,6 +281,7 @@ int MyList2<T>::eraseMatchingElements(const T& elem) {
 
 template<class T>
 void MyList2<T>::reverse(Node<T>* curr) {
+	/*
 	if(dataFirst->next != NULL) {
 		Node<T>* temp = dataFirst->next;
 		dataFirst->next = curr;
@@ -299,6 +301,15 @@ void MyList2<T>::reverse(Node<T>* curr) {
 			dataLast = dataLast->next;
 		}
 	}
+	*/
+	if(curr == NULL)
+		curr = dataFirst;
+	swap(curr->prev, curr->next);
+	if(curr == dataLast) {
+		swap(dataFirst, dataLast);
+		return;
+	}
+	reverse(curr->prev);
 }
 
 template<class T>
