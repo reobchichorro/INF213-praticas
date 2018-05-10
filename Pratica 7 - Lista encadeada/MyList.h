@@ -289,6 +289,7 @@ int MyList<T>::eraseMatchingElements(const T& willBeErased) {
 
 template<class T>
 void MyList<T>::reverse(Node<T>* curr) {
+	if(dataFirst == NULL) return;
 	if(dataFirst->next != NULL) {
 		Node<T>* temp = dataFirst->next;
 		dataFirst->next = curr;

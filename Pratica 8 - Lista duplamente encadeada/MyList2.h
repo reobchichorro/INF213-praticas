@@ -91,7 +91,7 @@ public:
 
 	int eraseMatchingElements(const T& elem);
 	void reverse(Node<T>* curr = NULL);
-	bool compare(iterator, iterator) {};
+	bool compare(iterator, iterator);
 
 private:
 	Node<T> *dataFirst, * dataLast;
@@ -203,7 +203,7 @@ template<class T>
 void MyList2<T>::insert(const T&elem, iterator where) {
 	//implemente esta funcao
 	if(where == NULL) {
-		throw MyList2Exception("Erro, insercao em posicao invalida da lista");
+		
 	}if(where == begin()) {
 		push_front(elem);
 		return;
@@ -211,8 +211,13 @@ void MyList2<T>::insert(const T&elem, iterator where) {
 
 	iterator newNode = new Node<T>(elem);
 	newNode->next = where;
-	newNode->prev = where->prev;
-	where->prev = newNode;
+	if(where != NULL) {
+		newNode->prev = where->prev;
+		where->prev = newNode;
+	} else {
+		newNode->prev = dataLast;
+		dataLast = newNode;
+	}
 	newNode->prev->next = newNode;
 
 	dataSize++;
@@ -292,6 +297,7 @@ void MyList2<T>::reverse(Node<T>* curr) {
 		dataFirst->prev = NULL;
 		reverse(curr);
 	}
+	4
 	else {
 		dataFirst->next = curr;
 		dataFirst->next->prev = dataFirst;
@@ -304,12 +310,23 @@ void MyList2<T>::reverse(Node<T>* curr) {
 	*/
 	if(curr == NULL)
 		curr = dataFirst;
+	if(dataFirst == NULL)
+		return;
 	swap(curr->prev, curr->next);
 	if(curr == dataLast) {
 		swap(dataFirst, dataLast);
 		return;
 	}
 	reverse(curr->prev);
+}
+
+template<class T>
+bool MyList2<T>::compare(iterator it1, iterator it2) {
+	if(it1->next == it2)
+		return true;
+	if(it1->next != NULL)
+		return compare(it1->next, it2);
+	return false;
 }
 
 template<class T>
@@ -357,6 +374,15 @@ std::ostream& operator<<(std::ostream &out, const MyList2<T2> &v) {
 	while(curr!=NULL) { // equivalente a while(curr)
 		 out << curr->data << " ";
 		 curr = curr->next;
+	}
+
+	out << "\n";
+
+	out << "Ordem reversa (testando ponteiros prev...)" << "\n";
+	curr = v.dataLast;
+	while(curr!=NULL) { // equivalente a while(curr)
+		 out << curr->data << " ";
+		 curr = curr->prev;
 	}
 
 	out << "\n";
