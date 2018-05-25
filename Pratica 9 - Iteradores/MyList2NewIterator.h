@@ -43,10 +43,6 @@ class MyList2Iterator; //precisamos declarar essa classe antes da MyList2 para q
 												//por outro lado, so podemos implementar o iterador apos a classe MyList2 (visto que precisaremos acessar
 												//dados da classe)
 
-
-
-
-
 template<class T>
 class MyList2 {
 public:
@@ -130,7 +126,6 @@ private:
 	Node<T> *ptr;
 	MyList2<T> *list;
 };
-
 
 //pre incremento/decremento
 template<class T>
@@ -347,10 +342,5 @@ std::ostream& operator<<(std::ostream &out, const MyList2<T2> &v) {
 
 	return out;
 }
-
-class Range {
-	
-}
-
 
 #endif

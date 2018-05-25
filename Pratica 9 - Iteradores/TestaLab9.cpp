@@ -71,7 +71,7 @@ void testaDecrementoEnd() {
 
 
 //Etapa 3: descomente o codigo abaixo para testar sua implementacao da classe Range...
-/*#include "Range.h"
+#include "Range.h"
 void testaRange() {
 	cout << "Testando a classe Range..." << endl;
 	Range range(1,5);
@@ -83,7 +83,7 @@ void testaRange() {
 
 	cout << endl;
 	for(int i:Range(1,5)) cout << i << endl;
-}*/
+}
 
 
 int main() {
@@ -94,7 +94,7 @@ int main() {
 	testaDecrementoEnd();
 
 	//Etapa 3: descomente o codigo abaixo (mantenha o codigo das etapas 1 e 2 descomentado...)
-	//testaRange();
+	testaRange();
 }
 
 /* Saida esperada apos a implementacao das 3 etapas:
