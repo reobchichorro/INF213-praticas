@@ -25,7 +25,7 @@ void Mediana::insere(int el) {
 
 int Mediana::getMediana() {
 	if(crescente.size() == decrescente.size())
-		return crescente.top()+(-1*decrescente.top())/2;
+		return (crescente.top()+(-1*decrescente.top()))/2;
 	else if (crescente.size() > decrescente.size())
 		return crescente.top();
 	else

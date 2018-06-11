@@ -41,7 +41,8 @@ void etapa2() {
 	MyStack<char> simbolos;
 	string entrada;
 
-	cin >> entrada;
+	cin.ignore();
+	getline(cin, entrada);
 	bool consistente = true;
 
 	for(int i=0; entrada[i] != '\0' && consistente; i++) {
@@ -69,10 +70,12 @@ void etapa2() {
 			else consistente = false;
 		}
 	}
+	if(!simbolos.empty()) consistente = false;
 
 	if(consistente) cout << "Consistente";
 	else cout << "Inconsistente";
 	cout << endl;
+	//cout << entrada << endl;
 }
 
 //---------------------------------------
