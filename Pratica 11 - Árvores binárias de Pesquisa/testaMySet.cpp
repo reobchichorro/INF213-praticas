@@ -28,14 +28,13 @@ int main() {
 	procura(s,-1);
 	procura(s,0);
 	procura(s,15);
-
+	
 	MySet<int> s2 = s;
 	procura(s2,10);
 	procura(s2,2);
 	procura(s2,-1);
 	procura(s2,0);
-	procura(s2,15);	
-	
+	procura(s2,15);
 }
 
 /*

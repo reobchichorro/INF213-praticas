@@ -50,7 +50,7 @@ private:
 	iterator find(const T&elem, Node<T> *root);
 
 	void destroy(Node<T> *root);
-	void copiar(Node<T>* thisRoot, const Node<T>* otherRoot);
+	Node<T> * copiar(const Node<T> *root) const;
 
 	void imprimeDFS_pre(const Node<T> *root) const;
 	void imprimeDFS_in(const Node<T> *root) const;
@@ -151,23 +151,24 @@ typename MySet<T>::iterator MySet<T>::begin() {
 
 //Destrutor, construtor de copia e operador =
 template <class T>
-MySet<T>::~MySet<T>() {
+MySet<T>::~MySet() {
 	destroy(root);
 }
 
 template <class T>
 void MySet<T>::destroy(Node<T>* root) {
-	if(root = NULL) return;
+	if(root == NULL) return;
 	destroy(root->left);
 	destroy(root->right);
 	
-	delete root->elem;
 	root->parent = NULL;
-	root = NULL;
+	delete root;
 }
 
 template <class T>
-MySet<T>::MySet<T>(const MySet<T>& other) {
+MySet<T>::MySet(const MySet<T>& other) {
+	size_ = 0;
+	root = NULL;
 	*this = other;
 }
 
@@ -176,23 +177,27 @@ MySet<T>& MySet<T>::operator=(const MySet<T>& other) {
 	if(&other==this) 
     	return *this;
 
-	destroy(root);  //Destruimos os valores antigos de this.
-	size = other.size;
-	copiar(root, other.root);
+	if(root != NULL) destroy(root);  //Destruimos os valores antigos de this.
+	root = copiar(other.root);
+	size_ = other.size();
     
 	return *this;
 }
 
-template <class T>
-void MySet<T>::copiar(Node<T>* thisRoot, const Node<T>* otherRoot) {
-	if(otherRoot == NULL) return;
+template  <class T>
+Node<T> * MySet<T>::copiar(const Node<T> *root) const {
+	if(root==NULL) { //caso base
+		return NULL;
+	}
+	
+	Node<T>* aux = new Node<T>(root->elem);
+	aux->parent = NULL;
+	aux->left = copiar(root->left);
+	if(aux->left != NULL) aux->left->parent = aux;
+	aux->right = copiar(root->right);
+	if(aux->right != NULL) aux->right->parent = aux;
 
-	thisRoot->elem = otherRoot->elem;
-	thisRoot->parent = NULL;
-	copiar(thisRoot->left, otherRoot->left);
-	thisRoot->left->parent = thisRoot;
-	copiar(thisRoot->right, otherRoot->right);
-	thisRoot->right->parent = thisRoot;
+	return aux;
 }
 
 template  <class T>
